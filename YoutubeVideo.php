@@ -9,7 +9,7 @@ use \Google_Service_Exception;
 
 class YoutubeVideo
 {
-    private static $apiKey = 'AIzaSyD00W45XLFJ-lSEKMGZULAFcEb4cERZ_-c';
+    private static $apiKey = 'YOUR-API-KEY';
     private static $youtube;
     private static $client;
 
