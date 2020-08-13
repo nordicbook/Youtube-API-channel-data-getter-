@@ -6,15 +6,18 @@ use \Google_Client;
 use \Google_Service_YouTube;
 use \Google_Exception;
 use \Google_Service_Exception;
+use \Config\ConfigGetter;
+
 
 class YoutubeVideo
 {
-    private static $apiKey = 'YOUR-API-KEY';
+    private static $apiKey;
     private static $youtube;
     private static $client;
 
     public function __construct(Google_Client $client)
     {
+        self::$apiKey = ConfigGetter::config('youtube')->apiKey;
         self::$client = $client;
         self::$client->setDeveloperKey(self::$apiKey);
         self::$youtube = new Google_Service_YouTube(self::$client);
@@ -50,10 +53,10 @@ class YoutubeVideo
 
     /*
      * Функция получения списка ID видео канала
-     * @param string $id  идентификатор канала Youtube
+     * @param string $id  идентификатор канала YoutubeController
      * @return array
      */
-    public function getСhannelVideosIDs(string $id): array
+    public function getСhannelVideosIDs(string $id)
     {
         try {
 
@@ -90,7 +93,7 @@ class YoutubeVideo
 
     /*
      * Функция получения информации всех видео канала
-     * @param string $id  идентификатор канала Youtube
+     * @param string $id  идентификатор канала YoutubeController
      * @return array
      */
 
@@ -100,11 +103,11 @@ class YoutubeVideo
         $videoString = implode(',', $videoString);
         $infoObject = self::getVideosById($videoString);
 
-        $resultArray = [];
+        $resultArray = ['_id' => $id];
 
         foreach ($infoObject as $item) {
 
-            $resultArray[$id][] = [
+            $resultArray['videos'][] = [
                 'id' => $item['id'],
                 'publishedAt' => $item['snippet']['publishedAt'],
                 'title' => $item['snippet']['title'],
@@ -116,6 +119,7 @@ class YoutubeVideo
             ];
 
         }
+
 
         return $resultArray;
     }
